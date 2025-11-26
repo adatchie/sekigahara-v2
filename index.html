@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>関ヶ原の戦い RTS - Enhanced Edition</title>
+    <link rel="stylesheet" href="styles/main.css">
+</head>
+
+<body oncontextmenu="return false;">
+
+    <div id="game-container">
+        <canvas id="gameCanvas"></canvas>
+        <div id="mist-layer"></div>
+        <div id="effect-layer"></div>
+        <div id="flash-overlay"></div>
+
+        <div id="ui-layer">
+            <div id="top-bar" class="hud-panel">
+                <span id="phase-text" style="color:#ffd700">関ヶ原の戦い</span>
+                <span id="status-text" style="font-size:14px; color:#ccc; margin-top:4px;">東軍: -- / 西軍: --</span>
+            </div>
+            <div id="unit-list"></div>
+            <button id="action-btn" onclick="commitTurn()">全軍 行動開始</button>
+            <div style="position:absolute; bottom:10px; left:10px; font-size:12px; color:#888; font-family:sans-serif;">
+                [左ドラッグ] 範囲選択 | [右ドラッグ] マップ移動 | [左クリ] 指示/確認
+            </div>
+            <div id="context-menu">
+                <button class="ctx-btn" style="color:darkred" onclick="issueCommand('ATTACK')">突撃</button>
+                <button class="ctx-btn" style="color:darkgreen" onclick="issueCommand('PLOT')">調略</button>
+                <button class="ctx-btn" onclick="closeCtx()">取消</button>
+            </div>
+        </div>
+
+        <div id="start-screen">
+            <h1
+                style="color:#ddd; font-size:56px; margin-bottom:15px; letter-spacing: 6px; text-shadow: 0 0 20px #fff, 0 0 40px rgba(255,255,255,0.5);">
+                関ヶ原の戦い
+            </h1>
+            <p style="color:#aaa; font-size:16px; margin-bottom:50px; letter-spacing: 2px;">
+                Enhanced Edition - 高精細マップ × 強化AI × 障害物回避
+            </p>
+            <div onclick="startGame('EAST')" id="btn-east" class="army-btn">東軍 (徳川家康)</div>
+            <div onclick="startGame('WEST')" id="btn-west" class="army-btn">西軍 (石田三成)</div>
+        </div>
+
+        <div id="victory-screen">
+            <div id="vic-msg-1" class="vic-title"></div>
+            <div id="vic-msg-2" class="vic-sub"></div>
+            <div style="margin-top:70px; cursor:pointer; color:#aaa; border-bottom:2px solid #aaa; padding:8px; font-size:18px; letter-spacing:2px;"
+                onclick="location.reload()">歴史を繰り返す</div>
+        </div>
+    </div>
+
+    <script type="module" src="scripts/main.js"></script>
+
+</body>
+
+</html>

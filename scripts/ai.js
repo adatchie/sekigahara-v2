@@ -1,0 +1,165 @@
+/**
+ * SEKIGAHARA RTS - AI System (Enhanced)
+ * より戦術的な判断を行うAIシステム
+ */
+
+import { getDist, getDistRaw } from './pathfinding.js';
+
+export class AISystem {
+    constructor() {
+        this.evaluationCache = new Map();
+    }
+
+    /**
+     * CPUユニットの行動を決定
+     */
+    decideAction(unit, allUnits, map) {
+        // 吉川広家と毛利秀元の特殊処理
+        if (unit.name === '吉川広家') return null;
+        if (unit.name === '毛利秀元' && allUnits.find(u => u.name === '吉川広家' && !u.dead)) {
+            return null;
+        }
+
+        // 既存の命令が有効ならそのまま（ただし攻撃目標が死んでいたらリセット）
+        if (unit.order && unit.order.type === 'ATTACK') {
+            const target = allUnits.find(u => u.id === unit.order.targetId);
+            if (target && !target.dead && target.side !== unit.side) {
+                return unit.order;
+            }
+        }
+
+        // 敵ユニットをリストアップ
+        const enemies = allUnits.filter(t => t.side !== unit.side && !t.dead);
+        if (enemies.length === 0) return null;
+
+        // 調略の可能性を検討（仁が高い場合）
+        if (unit.jin >= 75) {
+            const plotTarget = this.considerPlot(unit, enemies, allUnits, map);
+            if (plotTarget) {
+                return { type: 'PLOT', targetId: plotTarget.id };
+            }
+        }
+
+        // 戦術的評価で最適な目標を選択
+        const bestTarget = this.selectBestTarget(unit, enemies, allUnits, map);
+        if (!bestTarget) return null;
+
+        return { type: 'ATTACK', targetId: bestTarget.id };
+    }
+
+    /**
+     * 調略を検討
+     */
+    considerPlot(unit, enemies, allUnits, map) {
+        // 忠誠度が低い敵を探す
+        const plotCandidates = enemies.filter(e =>
+            e.loyalty < 80 &&
+            getDist(unit, e) <= 8 // ある程度近い
+        );
+
+        if (plotCandidates.length === 0) return null;
+
+        // 最も調略しやすそうな敵を選択
+        let bestScore = -Infinity;
+        let bestCandidate = null;
+
+        for (const enemy of plotCandidates) {
+            // 戦況を考慮
+            const eTotal = allUnits.filter(u => u.side === 'EAST' && !u.dead)
+                .reduce((a, c) => a + c.soldiers, 0);
+            const wTotal = allUnits.filter(u => u.side === 'WEST' && !u.dead)
+                .reduce((a, c) => a + c.soldiers, 0);
+            const myTotal = unit.side === 'EAST' ? eTotal : wTotal;
+            const total = eTotal + wTotal;
+            const tideRatio = myTotal / (total || 1);
+            const tideMod = (tideRatio - 0.5) * 100;
+
+            const successChance = 30 + (unit.jin - enemy.loyalty) + tideMod;
+
+            // 成功率が30%以上なら検討
+            if (successChance >= 30) {
+                const score = successChance + (enemy.soldiers / 100); // 兵力が多いほど価値が高い
+                if (score > bestScore) {
+                    bestScore = score;
+                    bestCandidate = enemy;
+                }
+            }
+        }
+
+        return bestCandidate;
+    }
+
+    /**
+     * 戦術的評価で最適な目標を選択
+     */
+    selectBestTarget(unit, enemies, allUnits, map) {
+        let bestScore = -Infinity;
+        let bestTarget = null;
+
+        for (const enemy of enemies) {
+            const score = this.evaluateTarget(unit, enemy, allUnits, map);
+            if (score > bestScore) {
+                bestScore = score;
+                bestTarget = enemy;
+            }
+        }
+
+        return bestTarget;
+    }
+
+    /**
+     * 目標の評価スコアを計算
+     */
+    evaluateTarget(unit, enemy, allUnits, map) {
+        let score = 0;
+
+        // 1. 距離（近いほうが良い）
+        const distance = getDist(unit, enemy);
+        score += (50 - distance) * 2; // 最大100点
+
+        // 2. 敵の弱さ（兵力が少ないほど良い）
+        const enemyStrength = enemy.soldiers;
+        score += (10000 - enemyStrength) / 100; // 最大100点
+
+        // 3. 地形優位性
+        const unitHeight = map[unit.r]?.[unit.q]?.h || 0;
+        const enemyHeight = map[enemy.r]?.[enemy.q]?.h || 0;
+        if (unitHeight > enemyHeight) {
+            score += 30; // 高所にいる
+        }
+
+        // 4. 協調攻撃の可能性（味方との距離）
+        const allies = allUnits.filter(u =>
+            u.side === unit.side &&
+            !u.dead &&
+            u.id !== unit.id &&
+            getDist(u, enemy) <= 5
+        );
+        score += allies.length * 20; // 味方が近くにいるほど良い
+
+        // 5. 重要目標ボーナス（大将クラス）
+        if (enemy.size === 2) {
+            score += 50;
+        }
+
+        // 6. 側面・背面攻撃の可能性
+        // （実装簡略化のため、距離が近い場合にボーナス）
+        if (distance <= 3) {
+            score += 25;
+        }
+
+        // 7. 忠誠度が低い敵は避ける（寝返る可能性）
+        if (enemy.loyalty < 70) {
+            score -= 30;
+        }
+
+        return score;
+    }
+
+    /**
+     * AIの思考をリセット（ターン開始時など）
+     */
+    reset() {
+        this.evaluationCache.clear();
+    }
+}
