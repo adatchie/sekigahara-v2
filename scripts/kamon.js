@@ -112,6 +112,9 @@ export class KamonDrawer {
             case 'HANABISHI': // 花菱（長束）
                 this.drawHanabishi(ctx, size);
                 break;
+            case 'MARUNI_DAKIGASHIWA': // 丸に抱き柏（小川）
+                this.drawMaruniDakigashiwa(ctx, size);
+                break;
             default:
                 this.drawDefault(ctx, size);
                 break;
@@ -1005,5 +1008,53 @@ export class KamonDrawer {
         ctx.fill();
         ctx.stroke();
         ctx.restore();
+    }
+
+    /**
+     * 丸に抱き柏（小川祐忠）
+     */
+    static drawMaruniDakigashiwa(ctx, size) {
+        ctx.strokeStyle = '#fff';
+        ctx.lineWidth = size * 0.08;
+
+        // 外枠の円
+        ctx.beginPath();
+        ctx.arc(0, 0, size * 0.85, 0, Math.PI * 2);
+        ctx.stroke();
+
+        ctx.fillStyle = '#fff';
+
+        // 3枚の柏の葉（中央に3つ配置）
+        const angles = [-90, 150, 30];
+        angles.forEach(a => {
+            ctx.save();
+            ctx.rotate(a * Math.PI / 180);
+            ctx.translate(0, -size * 0.1);
+
+            // 葉の形状（簡略化した笹葉）
+            ctx.beginPath();
+            ctx.moveTo(0, -size * 0.45);
+            ctx.quadraticCurveTo(size * 0.15, -size * 0.3, size * 0.1, 0);
+            ctx.quadraticCurveTo(size * 0.15, size * 0.2, 0, size * 0.15);
+            ctx.quadraticCurveTo(-size * 0.15, size * 0.2, -size * 0.1, 0);
+            ctx.quadraticCurveTo(-size * 0.15, -size * 0.3, 0, -size * 0.45);
+            ctx.fill();
+
+            // 左側の3つの実
+            for (let i = 0; i < 3; i++) {
+                ctx.beginPath();
+                ctx.arc(-size * 0.25, -size * 0.15 + (i * size * 0.15), size * 0.08, 0, Math.PI * 2);
+                ctx.fill();
+            }
+
+            // 右側の3つの実
+            for (let i = 0; i < 3; i++) {
+                ctx.beginPath();
+                ctx.arc(size * 0.25, -size * 0.15 + (i * size * 0.15), size * 0.08, 0, Math.PI * 2);
+                ctx.fill();
+            }
+
+            ctx.restore();
+        });
     }
 }

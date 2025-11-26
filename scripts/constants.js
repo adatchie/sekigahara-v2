@@ -94,7 +94,7 @@ export const WARLORDS = [
     { name: "平塚為広", side: 'WEST', soldiers: 360, atk: 75, def: 70, jin: 60, loyalty: 100, q: 20, r: 37, size: 1, p: P_BRAVE, kamon: 'MITSU_UROKO', bg: '#555' },
     { name: "脇坂安治", side: 'WEST', soldiers: 990, atk: 70, def: 70, jin: 50, loyalty: 60, q: 15, r: 40, size: 1, p: P_COWARD, kamon: 'WA_CHIGAI', bg: '#666' },
     { name: "朽木元綱", side: 'WEST', soldiers: 600, atk: 65, def: 65, jin: 50, loyalty: 60, q: 16, r: 41, size: 1, p: P_COWARD, kamon: 'FOUR_DIAMONDS', bg: '#666' },
-    { name: "小川祐忠", side: 'WEST', soldiers: 2100, atk: 70, def: 70, jin: 50, loyalty: 60, q: 14, r: 39, size: 1, p: P_COWARD, kamon: 'DEFAULT', bg: '#666' },
+    { name: "小川祐忠", side: 'WEST', soldiers: 2100, atk: 70, def: 70, jin: 50, loyalty: 60, q: 14, r: 39, size: 1, p: P_COWARD, kamon: 'MARUNI_DAKIGASHIWA', bg: '#666' },
     { name: "赤座直保", side: 'WEST', soldiers: 600, atk: 65, def: 65, jin: 50, loyalty: 60, q: 13, r: 42, size: 1, p: P_COWARD, kamon: 'DEFAULT', bg: '#666' },
 
     // --- 不確定勢力（松尾山）---
