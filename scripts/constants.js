@@ -90,7 +90,7 @@ export const WARLORDS = [
     { name: "明石全登", side: 'WEST', soldiers: 2000, atk: 88, def: 80, jin: 75, loyalty: 100, q: 24, r: 29, size: 1, p: P_BRAVE, kamon: 'JI', bg: '#444' },
     { name: "大谷吉継", side: 'WEST', soldiers: 600, atk: 90, def: 90, jin: 95, loyalty: 100, q: 20, r: 35, size: 1, p: P_CALM, kamon: 'MUKAI_CHO', bg: '#fff' }, // 白頭巾
     { name: "大谷吉治", side: 'WEST', soldiers: 1000, atk: 75, def: 75, jin: 70, loyalty: 100, q: 19, r: 36, size: 1, p: P_LOYAL, kamon: 'MUKAI_CHO', bg: '#ccc' },
-    { name: "戸田重政", side: 'WEST', soldiers: 1500, atk: 70, def: 70, jin: 60, loyalty: 100, q: 21, r: 34, size: 1, p: P_LOYAL, kamon: 'DEFAULT', bg: '#555' },
+    { name: "戸田重政", side: 'WEST', soldiers: 1500, atk: 70, def: 70, jin: 60, loyalty: 100, q: 21, r: 34, size: 1, p: P_LOYAL, kamon: 'MUTSUBOSHI', bg: '#555' },
     { name: "平塚為広", side: 'WEST', soldiers: 360, atk: 75, def: 70, jin: 60, loyalty: 100, q: 20, r: 37, size: 1, p: P_BRAVE, kamon: 'MITSU_UROKO', bg: '#555' },
     { name: "脇坂安治", side: 'WEST', soldiers: 990, atk: 70, def: 70, jin: 50, loyalty: 60, q: 15, r: 40, size: 1, p: P_COWARD, kamon: 'WA_CHIGAI', bg: '#666' },
     { name: "朽木元綱", side: 'WEST', soldiers: 600, atk: 65, def: 65, jin: 50, loyalty: 60, q: 16, r: 41, size: 1, p: P_COWARD, kamon: 'FOUR_DIAMONDS', bg: '#666' },

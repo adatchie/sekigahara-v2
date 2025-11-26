@@ -121,6 +121,9 @@ export class KamonDrawer {
             case 'KANI': // 蟹（寺沢）
                 this.drawKani(ctx, size);
                 break;
+            case 'MUTSUBOSHI': // 六つ星（戸田）
+                this.drawMutsuboshi(ctx, size);
+                break;
             default:
                 this.drawDefault(ctx, size);
                 break;
@@ -1172,6 +1175,33 @@ export class KamonDrawer {
             ctx.rotate(0.6 + (i * 0.2));
             ctx.fillRect(-size * 0.35, -size * 0.05, size * 0.35, size * 0.08);
             ctx.restore();
+        }
+    }
+
+    /**
+     * 六つ星（戸田重政）
+     */
+    static drawMutsuboshi(ctx, size) {
+        ctx.fillStyle = '#fff';
+
+        // 中央の星
+        ctx.beginPath();
+        ctx.arc(0, 0, size * 0.2, 0, Math.PI * 2);
+        ctx.fill();
+
+        // 周囲の5つの星
+        const starCount = 5;
+        const radius = size * 0.55;
+        const starSize = size * 0.18;
+
+        for (let i = 0; i < starCount; i++) {
+            const angle = (i * 360 / starCount - 90) * Math.PI / 180;
+            const x = Math.cos(angle) * radius;
+            const y = Math.sin(angle) * radius;
+
+            ctx.beginPath();
+            ctx.arc(x, y, starSize, 0, Math.PI * 2);
+            ctx.fill();
         }
     }
 }
