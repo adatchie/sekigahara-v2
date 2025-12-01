@@ -296,6 +296,9 @@ export class CombatSystem {
      * @param {string} killerSide - 討ち取った側の陣営
      */
     async dramaticDeath(unit, killerSide) {
+        // 本陣かどうかを判定
+        const isHeadquarters = (unit.unitType === 'HEADQUARTERS');
+
         // 討ち取った側によってSEを変更
         if (killerSide === this.playerSide) {
             // 敵を討ち取った！シャキーン！
@@ -311,10 +314,22 @@ export class CombatSystem {
         flash.style.opacity = 0.5;
         setTimeout(() => flash.style.opacity = 0, 150);
 
-        const msg = (unit.side === this.playerSide) ?
-            `無念… ${unit.name} 討ち死に！` :
-            `敵将・${unit.name}、討ち取ったり！`;
-        const color = (unit.side === this.playerSide) ? '#aaa' : '#ff0';
+        // メッセージを本陣と配下部隊で区別
+        let msg, color;
+
+        if (isHeadquarters) {
+            // 本陣ユニット: 従来の「討ち取った」メッセージ
+            msg = (unit.side === this.playerSide) ?
+                `無念… ${unit.name} 討ち死に！` :
+                `敵将・${unit.name}、討ち取ったり！`;
+            color = (unit.side === this.playerSide) ? '#aaa' : '#ff0';
+        } else {
+            // 配下部隊: 「撃破/壊滅」メッセージ
+            msg = (unit.side === this.playerSide) ?
+                `${unit.warlordName}配下の部隊、壊滅…` :
+                `${unit.warlordName}配下の部隊、撃破！`;
+            color = (unit.side === this.playerSide) ? '#aaa' : '#ffa500';
+        }
 
         const div = document.createElement('div');
         div.className = 'vic-title';
